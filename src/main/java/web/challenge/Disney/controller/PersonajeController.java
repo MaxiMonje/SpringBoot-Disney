@@ -7,22 +7,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import web.challenge.Disney.entity.PeliculaSerie;
 import web.challenge.Disney.entity.Personaje;
 import web.challenge.Disney.error.ErrorService;
 import web.challenge.Disney.service.PersonajeService;
 
 @Controller
+@RequestMapping("/characters")
 public class PersonajeController {
     
     @Autowired
     private PersonajeService personajeService;
     
     
-    @GetMapping("/characters")
+    @GetMapping("/")
     public ModelAndView showListCharacters() throws ErrorService{
         
         ModelAndView mav = new ModelAndView("characters");
@@ -30,7 +33,7 @@ public class PersonajeController {
         return mav;
     }
     
-    @GetMapping("/characters")
+    @GetMapping("/filtrerAge")
     public ModelAndView filtrerAge(@RequestParam Integer age) throws ErrorService{
         
         ModelAndView mav = new ModelAndView("characters");
@@ -38,7 +41,7 @@ public class PersonajeController {
         return mav;
     }
     
-    @GetMapping("/characters")
+    @GetMapping("/filtrerPelicula")
     public ModelAndView filtrerPeliculaSerie(@RequestParam Integer id) throws ErrorService{
         
         ModelAndView mav = new ModelAndView("characters");
@@ -46,7 +49,7 @@ public class PersonajeController {
         return mav;
     }
     
-    @GetMapping("/characters")
+    @GetMapping("/filtrerWeight")
     public ModelAndView filtrerWeight(@RequestParam Float weight) throws ErrorService{
         
         ModelAndView mav = new ModelAndView("characters");
@@ -54,18 +57,24 @@ public class PersonajeController {
         return mav;
     }
     
-    @PostMapping("/characters/createCharacter")
-    public String createCharacter(ModelMap modelo, @RequestParam String name, @RequestParam MultipartFile image, @RequestParam Float weight, @RequestParam Integer age, @RequestParam String history, @RequestParam PeliculaSerie peliculaSerie) throws ErrorService, IOException{
+    @GetMapping("/create")
+    public ModelAndView createCharacter(){
         
+            ModelAndView mav = new ModelAndView("character-form");
+        
+        return mav;
+
+    }
+
+    @PostMapping("/save")
+    public RedirectView save(@RequestParam String name, @RequestParam MultipartFile image, @RequestParam Float weight, @RequestParam Integer age, @RequestParam String history, @RequestParam PeliculaSerie peliculaSerie) throws ErrorService, IOException {
+
         personajeService.createCharacter(name, image, weight, age, history, peliculaSerie);
-        
-        return "redirect:/characters";
-        
-        
+
+        return new RedirectView("/characters");
     }
     
-    
-    @PostMapping("/characters/editCharacter")
+    @PostMapping("/editCharacter")
     public String editCharacter(ModelMap modelo, @RequestParam String name, @RequestParam MultipartFile image, @RequestParam Float weight, @RequestParam Integer age, @RequestParam String history, @RequestParam PeliculaSerie peliculaSerie, @RequestParam Integer id) throws ErrorService, IOException{
         
         personajeService.editCharacter(name, image, weight, age, history, peliculaSerie, id);
@@ -75,7 +84,7 @@ public class PersonajeController {
         
     }
     
-    @PostMapping("/characters/downCharacter")
+    @PostMapping("/downCharacter")
     public String downCharacter(ModelMap modelo,@RequestParam Integer id)throws ErrorService{
         
             personajeService.downCharacter(id);
@@ -83,7 +92,7 @@ public class PersonajeController {
         return "redirect:/characters";
     }
     
-    @GetMapping("/characters/searchCharacter")
+    @GetMapping("/searchCharacter")
     public String searchCharacter(ModelMap modelo, @RequestParam String name) throws ErrorService{
         Personaje character = personajeService.searchCharacter(name);
         modelo.put("character", character);

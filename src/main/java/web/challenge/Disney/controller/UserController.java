@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,16 +17,17 @@ import web.challenge.Disney.error.ErrorService;
 import web.challenge.Disney.service.UserService;
 
 @Controller
+@RequestMapping("/user")
 public class UserController {
     
     @Autowired
     private UserService userService;
     
     
-    @GetMapping("/createUser")
+    @GetMapping("/create")
     public ModelAndView createUsuario(Principal principal){
         
-        ModelAndView modelAndView = new ModelAndView("/createUser");
+        ModelAndView modelAndView = new ModelAndView("user-form");
        
         
         if(principal != null){
@@ -35,8 +37,8 @@ public class UserController {
        return modelAndView;
     }
     
-    @PostMapping("/createUser/save")
-    public String guardar(ModelMap modelo, @RequestParam String name, @RequestParam String lastname,@RequestParam String email, @RequestParam String username, @RequestParam String password) throws Exception{
+    @PostMapping("/save")
+    public String save(ModelMap modelo, @RequestParam String name, @RequestParam String lastname,@RequestParam String email, @RequestParam String username, @RequestParam String password) throws Exception{
        try{
            userService.createUser(name, lastname, password, username, email);
          

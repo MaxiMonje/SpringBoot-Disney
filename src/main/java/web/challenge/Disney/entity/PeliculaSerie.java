@@ -45,7 +45,7 @@ public class PeliculaSerie {
     private Boolean alta;
     
     @JoinColumn(nullable=false)
-    @OneToMany(mappedBy="peliculaSerie")
+    @OneToMany
     private List<Personaje> personajes;
     
     @JoinColumn(nullable=false)
